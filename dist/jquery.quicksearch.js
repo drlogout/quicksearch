@@ -1,5 +1,6 @@
-/*! jQuery-QuickSearch - v2.0.5 - 2014-08-26
-* Copyright (c) 2014 Deux Huit Huit (http://deuxhuithuit.com/);
+/*! jQuery-QuickSearch - v2.0.5 - 2015-02-19
+* http://deuxhuithuit.github.io/quicksearch/
+* Copyright (c) 2015 Deux Huit Huit (https://deuxhuithuit.com/);
 * Licensed MIT http://deuxhuithuit.mit-license.org */
 /*! jQuery-QuickSearch - v2.0.2 - 2013-11-15
 * Copyright (c) 2013 Deux Huit Huit (http://deuxhuithuit.com/);
@@ -11,6 +12,10 @@
 
 (function($, window, document, undefined) {
 	'use strict';
+
+	var state = {
+		searching: false
+	};
 	
 	$.quicksearch = {
 		defaults: { 
@@ -42,6 +47,10 @@
 					}
 				}
 				return true;
+			},
+			searchOn: function(){
+			},
+			searchOff: function(){
 			}
 		},
 		diacriticsRemovalMap: [
@@ -190,6 +199,16 @@
 			this.loader(false);
 			options.onAfter.call(this);
 			last_val = val;
+
+			if (val_empty && state.searching) {
+				options.searchOff.call(this);
+				state.searching = false;
+			} 
+			if (!val_empty && !state.searching) {
+				options.searchOn.call(this);
+				state.searching = true;
+			}
+						
 			return this;
 		};
 		
