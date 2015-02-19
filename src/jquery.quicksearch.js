@@ -8,6 +8,10 @@
 
 (function($, window, document, undefined) {
 	'use strict';
+
+	var state = {
+		searching: false
+	};
 	
 	$.quicksearch = {
 		defaults: { 
@@ -39,6 +43,10 @@
 					}
 				}
 				return true;
+			},
+			searchOn: function(){
+			},
+			searchOff: function(){
 			}
 		},
 		diacriticsRemovalMap: [
@@ -187,6 +195,16 @@
 			this.loader(false);
 			options.onAfter.call(this);
 			last_val = val;
+
+			if (val_empty && state.searching) {
+				options.searchOff.call(this);
+				state.searching = false;
+			} 
+			if (!val_empty && !state.searching) {
+				options.searchOn.call(this);
+				state.searching = true;
+			}
+						
 			return this;
 		};
 		
